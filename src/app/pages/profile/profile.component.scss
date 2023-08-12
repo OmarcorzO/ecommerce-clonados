@@ -1,0 +1,29 @@
+.img-profile-page {
+    width: auto;
+    min-height: 215px;
+    min-width: 225px;
+    max-height: 215px;
+    max-width: 225px;   
+}
+
+.img-profile {
+    width: auto;
+    min-height: 200px;
+    min-width: 200px;
+    max-height: 200px;
+    max-width: 200px;   
+}
+
+.width-select{
+    width: 50%;
+}
+
+.input-group{
+    width: 60%;
+}
+
+@media (max-width: 768px) { 
+    .input-group{
+        width: 100%;
+    }
+}

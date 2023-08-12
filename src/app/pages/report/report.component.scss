@@ -1,0 +1,17 @@
+.list-group-item:hover {
+    background: #f5f5f5;
+}
+
+.selected-motif:before{
+    border-left: 5px solid #3483fa;
+    bottom: 0;
+    content: "";
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+.product-photo{
+    background: #e6e6e6;
+    border-radius: 50%;
+}

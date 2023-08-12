@@ -1,0 +1,178 @@
+<!-- ============================================================== -->
+<!-- Table -->
+<!-- ============================================================== -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">RESUMEN PRODUCTOS</h5>
+                <div class="main-table table-responsive">
+                    <table class="table table-bordered v-middle">
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Descuento</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let productoPedido of pedido.productos">
+                                <td align="center">
+                                    <img [src]="productoPedido.producto.foto" alt="iMac" width="100">
+                                </td>
+                                <td width="450">
+                                    <a class="product-title-font-weight text-dark" [routerLink]="['/dashboard/detalle-producto/', productoPedido.producto.id ]">{{ productoPedido.producto.nombre }}</a>
+                                </td>
+                                <td>{{ productoPedido.cantidad }}</td>
+                                <td class="font-500">{{ productoPedido.producto.precioNormal | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                                <td class="font-500" *ngIf="productoPedido.producto.precioReducido > 0">
+                                    {{ productoPedido.producto.precioReducido }}%</td>
+                                <td class="font-500" *ngIf="productoPedido.producto.precioReducido == 0">No Aplica</td>
+                                <td width="150" class="font-500">{{ productoPedido.total | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5" class="font-500" align="right">Monto Total</td>
+                                <td class="font-500">{{ totalToPaintInTheHtml }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <div *ngIf="!showPaymentButton" class="row position-relative">
+                       <div class="col-md-6">
+                            <form [formGroup]="deliveryForm" (submit)="updateMyAddress()">
+                                <div class="form-group">
+                                    <label for="direccion">Mi dirección de entrega</label>
+                                    <input type="text" class="form-control" id="direccion" placeholder="Introduce tu dirección" formControlName="direccion">
+                                    <div class="text-danger mt-2" *ngIf="invalidField('direccion')">
+
+                                        <p>{{ getErrorMessage("direccion") }}</p>
+
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info m-r-10">Cambiar mi dirección</button>
+                            </form>
+                       </div>
+                       <div *ngIf="showContinueButton" class="boton-continuar mr-1 position-absolute" (click)="checkStock()">
+                            <button class="btn btn-success">Continuar compra</button>
+                       </div>
+                </div>
+                <div class="row" *ngIf="showPaymentButton">
+                    <div class="col-12">
+                        <div class="float-right">
+                            <button class="btn btn-success" (click)="makePayment()"> <i class="fas fa-arrow-right"></i> Pagar
+                            </button>
+                        </div>
+                        <!-- <form #modalWompi>
+                        </form> -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalPurchaseErrorDetails let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><i class="fas fa-shopping-cart"></i> Error en tu compra!! </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <p> Los siguientes productos ya no se encuentran disponibles con la cantidad a comprar que deseas
+            para cada uno, por lo tanto te recomendamos que verifiques de nuevo la cantidad disponible de los 
+            productos que deseas comprar y actualices tu carrito de compras.
+        </p>
+        <div class="table-responsive">
+            <table class="table table-bordered v-middle">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Descuento</th>
+                        <th>Eliminar producto de mi carrito</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let productoPedido of emptyProducts">
+                        <td align="center">
+                            <img [src]="productoPedido.foto" alt="foto del producto" width="100">
+                        </td>
+                        <td align="center" width="450">
+                            <h5 class="font-500"><strong>{{ productoPedido.nombre }}</strong></h5>
+                        </td>
+                        <td class="font-500">{{ productoPedido.precioNormal | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                        <td class="font-500" *ngIf="productoPedido.precioReducido > 0">
+                            {{ productoPedido.precioReducido }}%</td>
+                        <td class="font-500" *ngIf="productoPedido.precioReducido == 0">No Aplica</td>
+                        <td>
+                            <a (click)="deleteProductRowCarrito(productoPedido)" class="btn btn-danger text-inverse delete-product-row-carrito" title="" data-toggle="tooltip" data-original-title="Delete">
+                                <i class="ti-trash text-danger remove-icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">   
+        <button type="button" class="btn btn-outline-dark alineacion" (click)="modal.dismiss('Cross click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>
+
+<ng-template #modalProductNotExistingError let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><i class="fas fa-shopping-cart"></i> Error en tu compra!! </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <p> Los siguientes productos fueron eliminados de la tienda y ya no están disponibles, por lo tanto te recomendamos que los elimines de tu 
+            carrito para poder realizar una compra.
+        </p>
+        <div class="table-responsive">
+            <table class="table table-bordered v-middle">
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Producto</th>
+                        <th>Precio Original</th>
+                        <th>Descuento</th>
+                        <th>Eliminar producto de mi carrito</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let productoPedido of emptyProducts">
+                        <td align="center">
+                            <img [src]="productoPedido.foto" alt="foto del producto" width="100">
+                        </td>
+                        <td align="center" width="450">
+                            <h5 class="font-500"><strong>{{ productoPedido.nombre }}</strong></h5>
+                        </td>
+                        <td class="font-500">{{ productoPedido.precioNormal | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                        <td class="font-500" *ngIf="productoPedido.precioReducido > 0">
+                            {{ productoPedido.precioReducido }}%</td>
+                        <td class="font-500" *ngIf="productoPedido.precioReducido == 0">No Aplica</td>
+                        <td>
+                            <a (click)="deleteProductRowCarrito(productoPedido)" class="btn btn-danger text-inverse delete-product-row-carrito" title="" data-toggle="tooltip" data-original-title="Delete">
+                                <i class="ti-trash text-danger remove-icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">   
+        <button type="button" class="btn btn-outline-dark alineacion" (click)="modal.dismiss('Cross click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>

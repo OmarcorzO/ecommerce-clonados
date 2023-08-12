@@ -1,0 +1,92 @@
+.dropdown-toggle::after {
+    display: none;
+}
+
+.product-title-font-weight{
+    font-weight: 600;
+}
+
+/* Cargando verificar producto */
+/* From uiverse.io by @barisdogansutcu */
+svg {
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+}
+   
+circle {
+    fill: none;
+    stroke: hsl(214, 97%, 59%);
+    stroke-width: 2;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+100% {
+    transform: rotate(360deg);
+}
+}
+
+@keyframes dash4 {
+0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+}
+
+50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+}
+
+100% {
+    stroke-dashoffset: -125px;
+}
+}
+
+/* Imagen de no existe el producto */
+.product-stock-picture{
+    max-width: 80%;
+    height: 200px;
+    max-height: 200px;
+}
+
+/** Clases de calificar con estrellas*/
+ngb-rating {
+    font-size: 65px;
+    color: #277af5;
+}
+/* FIN */
+
+.default-image{
+    width: auto;
+    min-height: 225px;
+    min-width: 225px;
+    max-height: 225px;
+    max-width: 225px;
+}
+
+.product-image {
+    width: auto;
+    min-height: 225px;
+    min-width: 225px;
+    max-height: 225px;
+    max-width: 225px;
+    border: 1px solid #ccc;
+    padding: 1rem;
+}
+
+@media (max-width: 1023px) {
+    ngb-rating {
+        font-size: 50px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .product-image {
+        margin-bottom: 1.5rem;
+    }
+}

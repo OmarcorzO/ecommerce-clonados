@@ -1,0 +1,98 @@
+<div class="row" *ngIf="charging">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+
+<div *ngIf="!charging" class="row">
+    <div class="col-12">
+        <div class="float-left">
+            <h3 class="titles">Total de denuncias: {{ totalComplaints }}</h3>
+        </div>
+        <div class="float-right">
+            <select class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                <option [ngValue]="8">8 denuncias por página</option>
+                <option [ngValue]="16">16 denuncias por página</option>
+                <option [ngValue]="32">32 denuncias por página</option>
+                <option [ngValue]="50">50 denuncias por página</option>
+                <option [ngValue]="100">100 denuncias por página</option>
+            </select>
+        </div>
+    </div>
+</div> 
+
+<div class="row" *ngIf="!charging">
+    <div class="col-12 mb-0">
+        <div class="card mb-4" *ngFor="let complaint of complaints | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize">
+            <div class="card-body">
+                <div class="row see-publications">
+                    <div class="col-xs-12 col-md-12 col-lg-12 details-publication position-relative">
+                        <div class="complaint">
+                            <h5 class="card-title text-info mb-1">{{ complaint.denuncia }}</h5>
+    
+                            <p class="card-text mb-1">{{ complaint.descripcion | slice:0:180 }}{{ (complaint.descripcion.length > 280) ? '...': '' }}</p>
+                        </div>
+                        <div class="see-details mt-3">
+                            <div class="div-btn-action mr-0 float-right">
+                                <button class="btn btn-primary" (click)="openModal(modalcomplaintDetails, complaint)"><i class="fas fa-eye"></i> Ver más detalles</button>
+                                <button class="btn btn-danger" (click)="deleteComment(complaint.id, 'Denuncias/', 'denuncia', 'Denuncia eliminada', 1)"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                            </div>
+                        </div>
+                        <span class="position-absolute badge badge-info ml-2 span-date-post text-white float-left">
+                            {{ formatDate(complaint.fecha.toMillis()) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!charging && totalComplaints !== 0">
+    <div class="col-12">
+      <div class="float-right">
+        <ngb-pagination [(page)]="cpage" [pageSize]="cpageSize" [collectionSize]="totalComplaints"></ngb-pagination>
+      </div>
+    </div>
+</div>
+
+<div class="col-12 p-0" *ngIf="!charging && totalComplaints === 0">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/icon/undraw_annotation_re_h774.svg" alt="Sin denuncias">
+                        <h5 class="text-muted mt-4 mb-1">No existen denuncias aún</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalcomplaintDetails let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Detalles de la denuncia</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <h5 class="font-weight-semibold">Denuncia</h5>
+        <p>{{ complaintDetails.denuncia }}</p>
+        <h5 class="font-weight-semibold" *ngIf="complaintDetails.descripcion.length > 0">Descripción de la denuncia</h5>
+        <p *ngIf="complaintDetails.descripcion.length > 0">{{ complaintDetails.descripcion }}</p>
+        <h5 class="font-weight-semibold">Comentario denunciado</h5>
+        <p>{{ complaintDetails.commentText }}</p>
+        <a class="btn btn-primary" [routerLink]="['/dashboard/detalle-producto/', complaintDetails.productId]"><i class="fas fa-eye"></i> Ver publicación de la denuncia</a>
+        <a class="btn btn-danger" (click)="deleteComment(complaintDetails.commentId, 'Comentarios/', 'comentario' , 'Comentario eliminado', 2)"><i class="fas fa-trash-alt"></i> Eliminar comentario</a>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>

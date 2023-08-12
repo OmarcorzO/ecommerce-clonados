@@ -1,0 +1,86 @@
+<div class="row" *ngIf="charging">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="!charging && thereArePublications" class="row">
+    <div class="col-12">
+        <div class="float-left">
+            <h3 class="titles">Total de productos con ofertas: {{ totalResults }}</h3>
+        </div>
+        <div class="float-right">
+            <select class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                <option [ngValue]="8">8 productos por página</option>
+                <option [ngValue]="16">16 productos por página</option>
+                <option [ngValue]="32">32 productos por página</option>
+                <option [ngValue]="50">50 productos por página</option>
+                <option [ngValue]="100">100 productos por página</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row el-element-overlay" *ngIf="!charging && thereArePublications">
+    <div class="col-lg-3 col-md-6 card-producto" *ngFor="let producto of productos | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize">
+        <a *ngIf="directToHomePage" [routerLink]="['/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre }}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h3 class="mt-2">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="text-success" *ngIf="producto.precioReducido > 0">({{ producto.precioReducido }}% off)</small>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre }}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="text-success" *ngIf="producto.precioReducido > 0">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row" *ngIf="!charging && thereArePublications">
+    <div class="col-12">
+      <div class="float-right">
+        <ngb-pagination [(page)]="cpage" [pageSize]="cpageSize" [collectionSize]="totalResults"></ngb-pagination>
+      </div>
+    </div>
+</div>
+
+<div class="col-12 p-0" *ngIf="!charging && !thereArePublications">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">No existen publicaciones de productos con ofertas aún</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

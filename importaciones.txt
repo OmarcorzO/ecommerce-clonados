@@ -1,0 +1,14 @@
+##Instalar Paypal
+npm i ngx-paypal
+
+##Instalar Spinner de Paypal
+npm i ngx-spinner
+
+##Instalación Hash Md5
+npm i ts-md5
+
+##Mask Root (Jesus)
+npm i ngx-mask
+
+##Instalar Crypto
+npm i crypto-js

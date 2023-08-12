@@ -1,0 +1,270 @@
+<div class="row">
+    <div class="col-12">
+      <div class="card card-body">
+        <div class="d-flex mb-3 mt-3">
+          <input type="text" class="form-control w-25" placeholder="Buscar por nombre o correo" [(ngModel)]='searchTerm'>
+          <button class="btn btn-primary ml-auto" (click)="openModal(createUserModal, null)">Agregar administrador</button>
+        </div>
+        <div class="table-responsive table-bordered">
+          <table class="table table-striped mb-0 no-wrap v-middle">
+            <thead>
+              <tr>
+                <th class="text-center" scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Ciudad</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of filterArray | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize ; index as i;">
+  
+                <td class="text-center">
+                  {{i+1}}
+                </td>
+  
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img class="rounded-circle" [src]='user.imagePathv || fotoPerfilDefault' height=" 50px" width="50px">
+                    <div class="ml-3">
+                      <p class="font-medium mb-0">{{ user.nombre }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ user.correo }}</td>
+  
+                <td>{{ user.ciudad }}</td>
+                <td>{{ user.telefono}}</td>
+  
+                <td>
+                  <a href="javascript: void(0);" (click)="openModal(editUserModal, user)" class="link mr-2"
+                    placement="top" ngbTooltip="Edit">
+                    <!-- <i class="far fa-edit"></i> -->
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a *ngIf="user.estado" href="javascript: void(0);" class="link" (click)="deleteUser(user, true)" placement="top"
+                    ngbTooltip="Deshabilitar">
+                    <i class="fas fa-trash" ></i>
+                  </a>
+                  <a *ngIf="!user.estado" href="javascript: void(0);" class="link" (click)="deleteUser(user, false)" placement="top"
+                    ngbTooltip="Habilitar">
+                    <i class="fas fa-check" ></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-center mt-5">
+          <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="filterArray.length"></ngb-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <ng-template #editUserModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editUserLabel">Editar administrador</h5>
+  
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="editAdminForm" (ngSubmit)="editarAdministrador()" autocomplete="off">
+  
+        <div class="form-group row">
+          <label for="nombre" class="col-sm-4 col-form-label">Nombre</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="nombre" id="nombre" placeholder="Introduce el nombre completo">
+            <div class="text-danger mt-2" *ngIf="invalidFieldEdit('nombre')">
+
+              <p>{{ getErrorMessageEdit("nombre") }}</p>
+
+          </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Ciudad</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" placeholder="Introduce tu ciudad" aria-describedby="basic-addon1" formControlName="ciudad">
+            <div class="text-danger mt-2" *ngIf="invalidFieldEdit('ciudad')">
+
+                <p>{{ getErrorMessageEdit("ciudad") }}</p>
+
+            </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Dirección</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" placeholder="Introduce tu dirección" aria-describedby="basic-addon1" formControlName="direccion">
+            <div class="text-danger mt-2" *ngIf="invalidFieldEdit('direccion')">
+
+                <p>{{ getErrorMessageEdit("direccion") }}</p>
+
+            </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Cédula</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" onkeypress="return event.charCode>=48 && event.charCode<=57" placeholder="Introduce tu cédula" aria-describedby="basic-addon1" formControlName="cedula" maxlength="10">
+            <div class="text-danger mt-2" *ngIf="invalidFieldEdit('cedula')">
+
+                <p>{{ getErrorMessageEdit("cedula") }}</p>
+
+            </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Teléfono</label>
+          <div class="col-sm-8">
+            <input type="text"  prefix="+57" mask=" (000) 000 00 00" class="form-control" placeholder="Introduce tu teléfono" aria-describedby="basic-addon1" formControlName="telefono">
+            <div class="text-danger mt-2" *ngIf="invalidFieldEdit('telefono')">
+
+                <p>{{ getErrorMessageEdit("telefono") }}</p>
+
+            </div>
+          </div>
+      </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Editar</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+
+
+
+  <ng-template #createUserModal let-modal>
+  
+    <div class="modal-header">
+  
+      <h5 class="modal-title" id="editUserLabel">Crear administrador</h5>
+  
+      <button type="button" class="close" (click)="closeBtnClick()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  
+    </div>
+  
+    <div class="modal-body">
+  
+      <form [formGroup]="createAdminForm" (ngSubmit)="registrarAdministrador()" autocomplete="off">
+
+        <div class="form-group row">
+          <label for="nombre" class="col-sm-4 col-form-label">Nombre</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="nombre" id="nombre" placeholder="Introduce el nombre completo">
+            <div class="text-danger mt-2" *ngIf="invalidField('nombre')">
+
+              <p>{{ getErrorMessage("nombre") }}</p>
+
+          </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Ciudad</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" placeholder="Introduce tu ciudad" aria-describedby="basic-addon1" formControlName="ciudad">
+            <div class="text-danger mt-2" *ngIf="invalidField('ciudad')">
+
+                <p>{{ getErrorMessage("ciudad") }}</p>
+
+            </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Dirección</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" placeholder="Introduce tu dirección" aria-describedby="basic-addon1" formControlName="direccion">
+            <div class="text-danger mt-2" *ngIf="invalidField('direccion')">
+
+                <p>{{ getErrorMessage("direccion") }}</p>
+
+            </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Cédula</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" onkeypress="return event.charCode>=48 && event.charCode<=57" placeholder="Introduce tu cédula" aria-describedby="basic-addon1" formControlName="cedula" maxlength="10">
+            <div class="text-danger mt-2" *ngIf="invalidField('cedula')">
+
+                <p>{{ getErrorMessage("cedula") }}</p>
+
+            </div>
+          </div>
+      </div>
+      <div class="form-group row">
+          <label class="col-sm-4 col-form-label">Teléfono</label>
+          <div class="col-sm-8">
+            <input type="text"  prefix="+57" mask=" (000) 000 00 00" class="form-control" placeholder="Introduce tu teléfono" aria-describedby="basic-addon1" formControlName="telefono">
+            <div class="text-danger mt-2" *ngIf="invalidField('telefono')">
+
+                <p>{{ getErrorMessage("telefono") }}</p>
+
+            </div>
+          </div>
+      </div>
+  
+      <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Correo</label>
+        <div class="col-sm-8">
+          <input type="email" class="form-control" placeholder="Introduce tu correo" aria-describedby="basic-addon1" formControlName="correo" autocomplete="off">
+          <div class="text-danger mt-2" *ngIf="invalidField('correo')">
+
+              <p>{{ getErrorMessageFromMail("correo") }}</p>
+
+          </div>
+        </div>
+      </div>
+
+        <div class="form-group row">
+          <label for="contrasena" class="col-sm-4 col-form-label">Contraseña</label>
+          <div class="col-sm-8">
+            <input type="password" class="form-control" formControlName="contrasena" id="contrasena" placeholder="**********" autocomplete="off">
+            <div class="text-danger mt-2" *ngIf="invalidField('contrasena')">
+
+              <p>{{ getErrorMessage("contrasena") }}</p>
+
+          </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="password" class="col-sm-4 col-form-label">Confirmar contraseña</label>
+          <div class="col-sm-8">
+            <input type="password" class="form-control" formControlName="contrasena2" id="contrasena2" placeholder="**********">
+            <div class="text-danger mt-2" *ngIf="invalidPasswords()">
+
+              <p>Las contraseñas deben ser iguales</p>
+
+          </div>
+          </div>
+        </div>
+  
+  
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeBtnClick()">Cancelar</button>
+  
+          <button type="submit" class="btn btn-primary">Crear</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>

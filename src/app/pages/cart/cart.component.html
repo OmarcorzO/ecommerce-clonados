@@ -1,0 +1,111 @@
+<div class="row">
+    <!-- Column -->
+    <div class="col-md-9 col-lg-9">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h5 class="m-b-0 text-white">Tu carrito ({{ cantidad }} items)</h5>
+            </div>
+            <div class="card-body">
+                <div class="row" *ngIf="charging">
+                    <div class="col-12">
+
+                        <div class="text-center mt-4">
+                            <app-cargando></app-cargando>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="main-table table-responsive" *ngIf="!charging">
+                    <table class="table product-overview">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre del producto</th>
+                                <th>Precio</th>
+                                <th>Descuento</th>
+                                <th>Stock disponible</th>
+                                <th>Cantidad</th>
+                                <th style="text-align:center">Total</th>
+                                <th style="text-align:center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let productoPedido of pedido.productos">
+                                <td width="150">
+                                    <img [src]="productoPedido.producto.foto" alt="iMac" width="80">
+                                </td>
+                                <td width="450">
+                                    <a class="product-title-font-weight text-dark" [routerLink]="['/dashboard/detalle-producto/', productoPedido.producto.id ]">{{ productoPedido.producto.nombre | slice:0:50 }}{{ (productoPedido.producto.nombre.length > 50) ? '...': '' }}</a>
+                                </td>
+                                <td>{{ productoPedido.producto.precioNormal | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                                <td *ngIf="productoPedido.producto.precioReducido > 0">
+                                    {{ productoPedido.producto.precioReducido }}%</td>
+                                <td *ngIf="productoPedido.producto.precioReducido == 0">No Aplica</td>
+                                <td>{{ productoPedido.producto.stock }}</td>
+                                <td width="155" class="text-center"> 
+                                    <div class="row">
+                                        <div class="col-4 p-0">
+                                            <a class="btn btn-success action-text cursor" (click)="addCarrito(productoPedido.producto)">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 pl-0 pr-0 mt-2">
+                                            {{ productoPedido.cantidad }}
+                                        </div>
+                                        <div class="col-4 p-0">
+                                            <a class="btn btn-danger action-text cursor" (click)="removeCarrito(productoPedido.producto)">
+                                                <i class="fas fa-minus"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="150" align="center" class="font-500">{{ productoPedido.total | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                                <td width="60" align="center">
+                                    <a (click)="deleteProductRowCarrito(productoPedido.producto)" class="text-inverse delete-product-row-carrito" title="" data-toggle="tooltip" data-original-title="Delete">
+                                        <i class="ti-trash text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="col-12" *ngIf="!charging && cantidad == 0">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 pb-4">
+                                        <div class="text-center">
+                                            <img class="img-search" src="../../../assets/images/big/Online shopping _Isometric.svg" alt="no results">
+                                            <h5 class="text-muted mt-2 mb-1">No tienes productos agregados a tu carrito aún</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex no-block align-items-center">
+                        <a class="btn btn-dark btn-outline" [routerLink]="['/dashboard/ver-productos']">
+                            <i class="fas fa-arrow-left"></i> Continuar comprando</a>
+                        <div class="ml-auto">
+                            <a class="btn btn-danger" (click)="clearCarrito()">
+                                <i class="fas fa-trash-alt"></i> Vaciar Carrito</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+    <div class="col-md-3 col-lg-3">
+        <div class="card" *ngIf="cantidad != 0">
+            <div class="card-body">
+                <h5 class="card-title">Resumen de productos</h5>
+                <hr>
+                <small>Precio Total</small>
+                <h2>{{ totalToPaintInTheHtml }}</h2>
+                <hr>
+                <button class="btn btn-success" [routerLink]="['/dashboard/checkout']">Generar pedido</button>                            
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card card-body">
+            <h2 class="card-title mb-4">Agrega tu información de contacto</h2>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 col-xl-6">
+                    <form [formGroup]="contactInfoForm" (submit)="saveContactInformation()">
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                </div>
+                                <input type="text" minlength="7" maxlength="10" onkeypress="return event.charCode>=48 && event.charCode<=57" class="form-control form-control-lg" placeholder="Introduce tu teléfono de contacto" aria-describedby="basic-addon1" formControlName="telefono">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('telefono')">
+
+                                <p>{{ getErrorMessage("telefono") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="ti-email"></i>
+                                    </span>
+                                </div>
+                                <input type="email" class="form-control form-control-lg" placeholder="Introduce tu correo electronico" aria-describedby="basic-addon1" formControlName="correo">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('correo')">
+
+                                <p>{{ getErrorMessage("correo") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                </div>
+                                <input type="text" minlength="7" maxlength="30" class="form-control form-control-lg" placeholder="Introduce tu dirección" aria-describedby="basic-addon1" formControlName="direccion">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('direccion')">
+
+                                <p>{{ getErrorMessage("direccion") }}</p>
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <h3 class="card-title">Redes sociales <span class="font-15 text-cyan">(Opcional)</span></h3>
+                        <div class="form-group">
+                            <label>Instagram</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fab fa-instagram"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg" placeholder="Introduce la dirección url de tu instagram" aria-describedby="basic-addon1" formControlName="instagram">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('instagram')">
+
+                                <p>{{ getErrorMessage("instagram") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Facebook</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fab fa-facebook"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg" placeholder="Introduce la dirección url de tu facebook" aria-describedby="basic-addon1" formControlName="facebook">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('facebook')">
+
+                                <p>{{ getErrorMessage("facebook") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg" placeholder="Introduce la dirección url de tu whatsapp" aria-describedby="basic-addon1" formControlName="whatsapp">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('whatsapp')">
+
+                                <p>{{ getErrorMessage("whatsapp") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Twitter</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fab fa-twitter"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg" placeholder="Introduce la dirección url de tu twitter" aria-describedby="basic-addon1" formControlName="twitter">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('twitter')">
+
+                                <p>{{ getErrorMessage("twitter") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>YouTube</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon11">
+                                        <i class="fab fa-youtube"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg" placeholder="Introduce la dirección url de tu canal de youtube" aria-describedby="basic-addon1" formControlName="youtube">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('youtube')">
+
+                                <p>{{ getErrorMessage("youtube") }}</p>
+
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success m-r-10"><i class="fas fa-save"></i> Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- row -->

@@ -1,0 +1,184 @@
+.ticket-desc {
+    width: 500px;
+}
+
+.ticket-desc p {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.ticket-desc small {
+    width: 400px;
+    display: block;
+}
+
+.color-icon{
+    color: #ffffff;
+    font-size: 2.6rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.color-text-totalSearchResults{
+    color: #398bf7;
+}
+
+.inputPadding {
+    padding-left: 40px !important;
+}
+
+.input-icon-search {
+    color: #1896b6;
+    font-size: 20px;
+    position: absolute;
+    left: 25px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+
+.optional-text{
+    font-size: 0.9rem;
+}
+
+.input-icon-delete {
+    color: #c7c2c2;
+    font-size: 20px;
+    position: absolute;
+    right: 25px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+
+.input-search input:focus {
+    outline: none;
+}
+
+.calendar{
+    right: 0;
+    bottom: 0;
+}
+
+.p-action-button{
+    padding: 10px;
+}
+
+.table-users {
+    padding: 0;
+    background: #ffffff;
+}
+
+th,
+td {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+.width-fecha-th{
+    min-width: 198px;
+}
+
+.width-estado-th{
+    min-width: 170px;
+}
+
+.th-reducido{
+    max-width: 150px;
+}
+
+.w100 {
+    width: 100px;
+}
+
+.w115 {
+    width: 115px;
+}
+
+.w140 {
+    width: 140px;
+}
+
+.table-responsive{
+    margin-bottom: 15px;
+}
+
+.total-tickets {
+    transition: all 0.55s;
+}
+
+.total-tickets:hover {
+    cursor: pointer;
+    transform: translateY(-9px);
+}
+
+.avatar {
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
+}
+
+.action-btn {
+    padding: 0;
+}
+
+.action-text {
+    color: #ffffff !important;
+}
+
+.search {
+    padding: 0;
+}
+
+.img-search {
+    width: 80%;
+    height: 33vh;
+    max-height: 33vh;
+}
+
+.title-info{
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.user-image-in-details{
+    min-height: 50px;
+    max-height: 50px;
+}
+
+.user-image{
+    min-height: 280px;
+    max-height: 280px;
+    border: 1px solid rgb(207, 200, 200);
+}
+
+@media (min-width: 300px) and (max-width: 384px) {
+
+    .show-all-button{
+        margin-top: 0.8rem;
+    }
+
+    .search-button{
+       margin-top: 0.8rem;
+    }
+}
+
+@media (min-width: 385px) and (max-width: 490px) {
+    
+    .search-button{
+       margin-top: 0.8rem;
+    }
+}
+
+@media (min-width: 490px) and (max-width: 597px) {
+    .clean-dates{
+        margin-top: 0rem;
+     }
+}
+
+
+@media (min-width: 598px) and (max-width: 750px) {
+    .clean-dates{
+       margin-top: 1rem;
+    }
+}

@@ -1,0 +1,62 @@
+<!-- ============================================================== -->
+<!-- toggle and nav items -->
+<!-- ============================================================== -->
+<ul class="navbar-nav">
+    <div class="navbar-header d-none d-lg-block">
+        <!-- ============================================================== -->
+        <!-- Logo -->
+        <!-- ============================================================== -->
+        <a class="navbar-brand" href="/">
+            <!-- Logo icon -->
+            <b class="logo-icon">
+                <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                <!-- Dark Logo icon -->
+                <img src="assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                <!-- Light Logo icon -->
+                <img src="assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+            </b>
+            <!--End Logo icon -->
+            <!-- Logo text -->
+            <span class="logo-text">
+                <!-- dark Logo text -->
+                <img src="assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                <!-- Light Logo text -->
+                <img src="assets/images/logo-light-text.png" class="light-logo" alt="homepage" />
+            </span>
+        </a>
+        <!-- ============================================================== -->
+        <!-- End Logo -->
+        <!-- ============================================================== -->
+    </div>
+</ul>
+
+<div class="input-group search mr-4">
+    <div class="input-group-prepend">
+        <span class="input-group-text">
+            <i class="ti-search"></i>
+        </span>
+    </div>
+    <input type="text" class="form-control" placeholder="Search by post type, part number or description..."  #txtTerm/>
+</div>
+
+<!-- ============================================================== -->
+<!-- Right side toggle and nav items -->
+<!-- ============================================================== -->
+<ul class="navbar-nav">
+
+    <li class="nav-item dropdown" placement="bottom-right">
+        <a  routerLink="/login" class="nav-link dropdown-toggle waves-effect waves-dark btn btn-outline-info text-info button-color mt-2 mb-2"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle"></i> Iniciar Sesión</a>
+    </li>
+
+    <li class="nav-item dropdown" placement="bottom-right">
+        <a  routerLink="/register" class="nav-link dropdown-toggle waves-effect waves-dark btn btn-outline-primary text-primary button-color mt-2 mb-2 ml-1"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-plus"></i> Crear tu cuenta</a>
+    </li>
+
+    <li class="nav-item dropdown" placement="bottom-right">
+        <a (click)="sessionWarning()" class="nav-link dropdown-toggle waves-effect waves-dark btn btn-warning mt-2 mb-2 ml-1"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-shopping-cart"></i> </a>
+    </li>
+   
+</ul>

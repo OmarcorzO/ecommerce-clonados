@@ -1,0 +1,82 @@
+<div class="row" *ngIf="charging && charging2">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="!charging && !charging2 && thereArePublications" class="row bd-highlight mb-2">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <select (change)="onTableSizeChange()" class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                <option [ngValue]="8">8 categorías por página</option>
+                <option [ngValue]="16">16 categorías por página</option>
+                <option [ngValue]="24">24 categorías por página</option>
+                <option [ngValue]="48">48 categorías por página</option>
+                <option [ngValue]="100">100 categorías por página</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row el-element-overlay" *ngIf="!charging && !charging2 && thereArePublications">
+    <div class="col-lg-3 col-md-6 card-producto" *ngFor="let category of categories">
+        <a *ngIf="directToHomePage" [routerLink]="['/ver-productos-por-categoria/', category.nombre ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="category.foto" alt="Foto de la categoría {{ category.nombre }}" class="category-image"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ category.nombre | slice:0:30 }}{{ (category.nombre.length > 30) ? '...': '' }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/ver-productos-por-categoria/', category.nombre ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="category.foto" alt="Foto de la categoría {{ category.nombre}}" class="category-image"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ category.nombre | slice:0:30 }}{{ (category.nombre.length > 30) ? '...': '' }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="col-12 p-0" *ngIf="!charging && !charging2 && !thereArePublications">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">No existen categorías aún</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!charging && !charging2">
+    <div class="col-12 mt-0 mb-0">
+        <div class="float-right">
+            <a *ngIf="!noPreviousPage && !noPreviousPage2" class="btn default btn-warning" (click)="previousPage()">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </a>
+            <a *ngIf="!thereIsNoNextPage" class="btn default btn-success" (click)="nextPageP()">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>

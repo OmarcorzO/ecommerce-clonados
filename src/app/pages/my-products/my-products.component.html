@@ -1,0 +1,179 @@
+<div class="row" *ngIf="charging && charging2">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="!charging && !charging2 && thereArePublications" class="row bd-highlight mb-2">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <select (change)="onTableSizeChange()" class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                <option [ngValue]="8">8 productos por página</option>
+                <option [ngValue]="16">16 productos por página</option>
+                <option [ngValue]="24">24 productos por página</option>
+                <option [ngValue]="48">48 productos por página</option>
+                <option [ngValue]="100">100 productos por página</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row el-element-overlay" *ngIf="!charging && !charging2 && thereArePublications">
+    <div class="col-lg-3 col-md-6 card-producto" *ngFor="let producto of productos">
+        <div class="card">
+            <div class="el-card-item">
+                <div class="el-card-avatar el-overlay-1">
+                    <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    <div class="el-overlay">
+                        <ul class="list-style-none el-info">
+                            <li class="el-item">
+                                <a class="btn default btn-outline el-link" [routerLink]="['/dashboard/detalle-producto/', producto.id ]">
+                                    <i class="icon-link"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="height-card d-flex no-block">
+                    <div class="m-l-15">
+                        <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                        <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                        <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                            <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                        </h4>
+                        <a class="btn btn-primary btn-action button-margins mr-2" (click)="openModal(modalEditProduct, producto)"><i class="far fa-edit"></i></a>
+                        <a class="btn btn-danger btn-action button-margins" (click)="deleteProduct(producto.id, producto.nombre)"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 p-0" *ngIf="!charging && !charging2 && !thereArePublications">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">No existen publicaciones de productos aún</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!charging && !charging2">
+    <div class="col-12 mt-0 mb-0">
+        <div class="float-right">
+            <a *ngIf="!noPreviousPage && !noPreviousPage2" class="btn default btn-warning" (click)="previousPage()">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </a>
+            <a *ngIf="!thereIsNoNextPage" class="btn default btn-success" (click)="nextPageP()">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalEditProduct let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><i class="fas fa-edit"></i> Editar Producto </h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-8 col-xs-8">
+                <form [formGroup]="editProductForm" (submit)="updateProduct()">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del producto</label>
+                        <input type="text" class="form-control" id="nombre" [ngClass]="{ 'is-invalid': invalidField('nombre'), 'is-valid': !invalidField('nombre') &&  formSubmitted === true }" placeholder="Introduce el nombre del producto" formControlName="nombre">
+                        <div class="text-danger mt-2" *ngIf="invalidField('nombre')">
+
+                            <p>{{ getErrorMessage("nombre") }}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción del producto</label>
+                        <quill-editor class="txtContent" [modules]="modulesQuill" placeholder="Introduce la descripción del producto" formControlName="descripcion"></quill-editor>
+                        <div class="text-danger mt-2" *ngIf="invalidField('descripcion')">
+
+                            <p>{{ getErrorMessage("descripcion") }}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="precio">Selecciona la categoria del producto</label>
+                        <select class="custom-select select-size" [ngClass]="{ 'is-invalid': invalidField('categoria'), 'is-valid': !invalidField('categoria') &&  formSubmitted === true }" formControlName="categoria">
+                            <option value="" disabled selected>-- Selecciona una opción --</option>
+                            <option *ngFor="let result of allCategories" [ngValue]="result.category">
+                              {{ result.category }}
+                            </option>
+                        </select>
+                        <div class="text-danger mt-2" *ngIf="invalidField('categoria')">
+
+                            <p>{{ getErrorMessage("categoria") }}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="precio">Precio del producto</label>
+                        <input type="text" class="form-control" id="precio" [ngClass]="{ 'is-invalid': invalidField('precioNormal'), 'is-valid': !invalidField('precioNormal') &&  formSubmitted === true }" placeholder="Introduce el precio del producto" formControlName="precioNormal" prefix="$ " mask="separator.2"
+                        thousandSeparator=",">
+                        <div class="text-danger mt-2" *ngIf="invalidField('precioNormal')">
+
+                            <p>{{ getErrorMessage("precioNormal") }}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="precioReducido">Descuento</label>
+                        <input type="text" class="form-control" id="precioReducido" [ngClass]="{ 'is-invalid': invalidField('precioReducido'), 'is-valid': !invalidField('precioReducido') &&  formSubmitted === true }" placeholder="Introduce el descuento del producto"
+                            formControlName="precioReducido" suffix="%" mask="00||0">
+                        <div class="text-danger mt-2" *ngIf="invalidField('precioReducido')">
+
+                            <p>{{ getErrorMessage("precioReducido") }}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="text" class="form-control" id="stock" [ngClass]="{ 'is-invalid': invalidField('stock'), 'is-valid': !invalidField('stock') &&  formSubmitted === true }" placeholder="Introduce el stock disponible del producto" formControlName="stock" minlength="0" maxlength="4" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
+                        <div class="text-danger mt-2" *ngIf="invalidField('stock')">
+
+                            <p>{{ getErrorMessage("stock") }}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="precioReducido">Foto del producto</label>
+                        <img [src]="tempImg" alt="user" class="image-product-edit form-control mb-2"/>
+                        <input (change)="newImageUpload($event)" class="form-control" id="file-upload" type="file" accept="image/*">
+                        <div class="text-danger mt-2" *ngIf="!validImageExtension">
+    
+                            <p>La extensión de este archivo no está permitida, cargue un archivo con la 
+                                extensión jpg, jpeg, png.</p>
+
+                        </div>
+                        <div class="text-danger mt-2" *ngIf="!allowedFileSize">
+
+                            <p>Este archivo no está permitido porque excede el tamaño permitido de 5 MB</p>
+
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success m-r-10">Guardar Producto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('Cross click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>

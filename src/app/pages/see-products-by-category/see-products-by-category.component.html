@@ -1,0 +1,91 @@
+<div class="row" *ngIf="charging && charging2">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="!charging && !charging2 && thereArePublications" class="row bd-highlight mb-2">
+    <div class="col-12">
+        <h3 class="titles float-left">Categoría de {{ categoryToShow }}</h3>
+        <div class="d-flex justify-content-between float-right">
+            <select (change)="onTableSizeChange()" class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                <option [ngValue]="8">8 productos por página</option>
+                <option [ngValue]="16">16 productos por página</option>
+                <option [ngValue]="24">24 productos por página</option>
+                <option [ngValue]="48">48 productos por página</option>
+                <option [ngValue]="100">100 productos por página</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row el-element-overlay" *ngIf="!charging && !charging2 && thereArePublications">
+    <div class="col-lg-3 col-md-6 card-producto" *ngFor="let producto of productos">
+        <a *ngIf="directToHomePage" [routerLink]="['/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="col-12 p-0" *ngIf="!charging && !charging2 && !thereArePublications">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">No existen publicaciones de productos con esta categoría aún</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!charging && !charging2">
+    <div class="col-12 mt-0 mb-0">
+        <div class="float-right">
+            <a *ngIf="!noPreviousPage && !noPreviousPage2" class="btn default btn-warning" (click)="previousPage()">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </a>
+            <a *ngIf="!thereIsNoNextPage" class="btn default btn-success" (click)="nextPageP()">
+                Siguiente <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>

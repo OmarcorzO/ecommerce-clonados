@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card card-body">
+            <h2 class="card-title">Agrega una nueva categoría para tus productos.</h2>
+            <div class="row">
+                <div class="col-sm-6 col-xs-6">
+                    <form [formGroup]="saveCategoryForm" (submit)="saveCategory()">
+                        <div class="form-group">
+                            <label for="nombre">Nombre de la categoría</label>
+                            <input type="text" class="form-control" id="nombre" [ngClass]="{ 'is-invalid': invalidField('nombre'), 'is-valid': !invalidField('nombre') &&  formSubmitted === true }" placeholder="Introduce el nombre de la categoría" formControlName="nombre">
+                            <div class="text-danger mt-2" *ngIf="invalidField('nombre')">
+
+                                <p>{{ getErrorMessage("nombre") }}</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="file-upload">Foto de la categoría</label>
+                            <img *ngIf="!tempImg" src="../../../assets/images/big/no-img.png" class="form-control default-photo">
+                            <img *ngIf="tempImg" [src]="tempImg" class="form-control default-photo">
+                            <input (change)="newImageUpload($event)" class="form-control mt-2" id="file-upload" type="file" accept="image/*">
+                            <div class="text-danger mt-2" *ngIf="!photoUploaded">
+
+                                <p>Debes seleccionar una foto</p>
+
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="!validImageExtension">
+    
+                                <p>La extensión de este archivo no está permitida, cargue un archivo con la 
+                                    extensión jpg, jpeg, png.</p>
+
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="!allowedFileSize">
+
+                                <p>Este archivo no está permitido porque excede el tamaño permitido de 5 MB</p>
+
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success m-r-10"><i class="fas fa-save"></i> Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- row -->

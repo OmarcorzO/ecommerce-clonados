@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ecommerce-guajira": {
+      "hosting": {
+        "adminpro-angular": [
+          "ecommerce-guajira"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ecommerce-guajira"
+  }
+}

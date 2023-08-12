@@ -1,0 +1,30 @@
+.imagen-producto{
+    min-height: 250px;
+    max-height: 250px;
+}
+
+.height-card{
+    min-height: 140px;
+    max-height: 140px;
+}
+
+.image-product-edit{
+    min-height: 320px;
+}
+
+@media (max-width: 768px) { 
+
+    .height-card{
+        min-height: 120px;
+        max-height: 120px;
+    }
+
+}
+
+@media (min-width: 1024px) {
+
+    .height-card{
+        min-height: 135px;
+        max-height: 135px;
+    }
+}

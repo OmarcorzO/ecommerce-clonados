@@ -1,0 +1,37 @@
+<div class="row" *ngIf="loadingProducts">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+<div class="row" *ngIf="!loadingProducts">
+    <div class="col-lg-12">
+        <div class="card card-recent-posts"> 
+            <div class="card-body">
+                <h4 class="card-title"><span class="lstick"></span>Últimas publicaciones de productos</h4>
+            </div>
+            <div class="comment-widgets scrollable" [perfectScrollbar]="config" style="height: 70vh;">
+                <!-- Comment Row -->
+                <div *ngIf="products.length > 0">
+                    <div class="d-flex flex-row comment-row card-products" *ngFor="let product of products">
+                        <div class="p-2"><span class="round"><img src="{{product.foto}}" alt="producto" width="50" height="50"></span></div>
+                        <div class="comment-text w-100" [routerLink]="['/dashboard/detalle-producto/', product.id ]">
+                            <h5>{{product.nombre}}</h5>
+                        </div>
+                    </div>
+                </div>
+
+                
+            <div *ngIf="products.length === 0" style="width: 100%;" class="text-center mt-img-fondo">
+                <img src="../../../assets/images/big/undraw_online_articles_re_yrkj.svg" 
+                alt="imagen-de-fondo" class="img-fondo">
+
+                <h4 class="mt-4 color-text">No existen publicaciones de productos aún</h4>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

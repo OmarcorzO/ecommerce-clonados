@@ -1,0 +1,41 @@
+.titles{
+    color: #398bf7;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.imagen-producto{
+    min-height: 250px;
+    max-height: 250px;
+}
+
+.height-card{
+    min-height: 85px;
+    max-height: 85px;
+}
+
+.price-of-the-product{
+    font-weight: 500;
+}
+
+.img-search {
+    height: 30rem;
+    max-height: 20rem;
+}
+
+@media (max-width: 494px) {
+
+    .product-pager-options{
+        float: left !important;
+        margin-bottom: 15px;
+    }
+}
+
+
+@media (max-width: 575px) {
+
+    .height-card{
+        min-height: 65px;
+        max-height: 65px;
+    }
+}

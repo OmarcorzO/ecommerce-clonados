@@ -1,0 +1,28 @@
+.titles{
+    color: #398bf7;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.category-image{
+    min-height: 280px;
+    max-height: 280px;
+}
+
+.imagen-producto{
+    min-height: 250px;
+    max-height: 250px;
+}
+
+.height-card{
+    min-height: 85px;
+    max-height: 85px;
+}
+
+@media (max-width: 575px) {
+
+    .height-card{
+        min-height: 65px;
+        max-height: 65px;
+    }
+}

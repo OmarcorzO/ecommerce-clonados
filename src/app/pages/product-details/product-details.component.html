@@ -1,0 +1,123 @@
+<div class="row" *ngIf="charging">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+<div class="row" *ngIf="!charging && !loadingUserData && theProductExists">
+    <!-- Column -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title name-title">{{ producto.nombre }}</h3>
+                <div class="row">
+                    <div class="col-sm-12 col-md-4 col-lg-4">
+                        <div class="white-box text-center">
+                            <img [src]="producto.foto" class="img-fluid img-producto mb-4">
+                        </div>
+                        <div class="mb-4">
+                            <div class="average-opinions">
+                                <div class="average">
+                                    <div class="star-block">
+                                        <span class="star text-left">&#x2605;</span>
+                                    </div>
+                                    <div class="average-block">
+                                        <p class="average-grade">{{ average }}</p>
+                                    </div>
+                                </div>
+                                <p class="average-text mb-4">Promedio entre {{ producto.tamanoDeLaMuestra }} calificaciones</p>
+                            </div>
+                            <h4 class="box-title category-title">Categoría del producto</h4>
+                            <p>{{ producto.categoria }}</p>
+                            <h4 class="box-title stock-title">Stock disponible</h4>
+                            <p>{{ producto.stock }}</p>
+                            <h2 class="mt-4" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h2>
+                            <p class="mt-4 mb-0 price-with-discount" *ngIf="producto.precioReducido > 0"><s>{{ getPrice(producto.precioNormal) }}</s></p>
+                            <h2 class="mt-1" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="text-success" *ngIf="producto.precioReducido > 0">({{ producto.precioReducido }}% off)</small>
+                            </h2>
+                            <a *ngIf="producto.stock > 0" class="btn btn-dark btn-rounded m-r-5 cursor" (click)="addCarrito()">
+                                <i class="ti-shopping-cart"></i>
+                            </a>
+                            <p *ngIf="producto.stock == 0" class="text-danger">Producto no disponible actualmente</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <h4 class="box-title description-title">Descripción del producto</h4>
+                        <div class="product-details">
+                            <quill-view-html [content]="producto.descripcion" theme="snow"></quill-view-html>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+</div>
+
+<div class="row" *ngIf="!charging && !loadingUserData && theProductExists" 
+    infiniteScroll
+    (scrolled)="onScrollDown()"
+    [infiniteScrollDistance]="1"
+    [infiniteScrollThrottle]="50">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Opiniones sobre {{ producto.nombre }}</h4>
+                <ul class="list-unstyled m-t-40">
+                    <div class="comment-block" *ngFor="let comment of commentsToShow">
+                        <li class="media">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">{{ comment.usuario.nombre }}</h5> {{ comment.texto }}
+                            </div>
+                        </li>
+                        <div class="row date-block-and-complaint">
+                            <div class="col-6 text-left text-black-50 mt-2 font-weight-semibold">
+                                <p>{{ formatDate(comment.fecha.toMillis()) }}</p>
+                            </div>
+                            <div class="col-6 text-right mt-2">
+                                <a class="report" (click)="verifyLogin(comment.id)">Denunciar</a>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </ul>
+                <div *ngIf="loadingComments" class="text-center mt-4">
+                    <svg viewBox="25 25 50 50">
+                        <circle r="20" cy="50" cx="50"></circle>
+                    </svg>
+                </div>
+                <div *ngIf="!areThereComments">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/icon/Comment_Line.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">No existen comentarios para este producto aun.</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-12 p-0" *ngIf="!charging && !theProductExists">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">Error, no existe este producto</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <button *ngIf="showButton" class="button" (click)="onScrollTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+</div>

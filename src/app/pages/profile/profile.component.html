@@ -1,0 +1,134 @@
+<div class="row">
+	<div class="col-12">
+        <div class="row">
+            <!-- Column -->
+            <div class="col-lg-12 col-xlg-12 col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills" (navChange)="detectChanges($event)">
+                      <li [ngbNavItem]="1">
+                        <a ngbNavLink>Configuración</a>
+                        <ng-template ngbNavContent>
+                          <div class="card-body">
+                            <form class="form-horizontal m-t-20" id="profileForm" autocomplete="off" [formGroup]="profileForm" (ngSubmit)="registrarse()">
+                                <div class="form-row mb-2">
+                                    <div class="form-group col-md-12">                                    
+                                        <label for="fotoPerfil">Foto de Perfil</label>
+                                        <img *ngIf="!tempImg" [src]="fotoPerfilDefault" class="form-control img-profile-page rounded-circle">
+                                        <img *ngIf="tempImg" [src]="tempImg" class="form-control img-profile-page rounded-circle">
+                                        <input (change)="newImageUpload($event)" class="form-control width-select mt-3" id="file-upload" type="file" accept="image/png,image/jpeg">
+
+                                        <div class="text-danger mt-2" *ngIf="!validImageExtension">
+        
+                                            <p>La extensión de este archivo no está permitida, cargue un archivo con la 
+                                                extensión jpg, jpeg, png.</p>
+            
+                                        </div>
+                                        <div class="text-danger mt-2" *ngIf="!allowedFileSize">
+            
+                                            <p>Este archivo no está permitido porque excede el tamaño permitido de 5 MB</p>
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="font-weight-bold">Nombre</label>
+                                        <input type="text" class="form-control form-control-lg" [(ngModel)]="clienteEdit.nombre" placeholder="Introduce tu nombre completo" value="" aria-describedby="basic-addon1" formControlName="nombre">
+
+                                        <div class="text-danger mt-2" *ngIf="invalidFieldP('nombre')">
+        
+                                            <p>{{ getErrorMessage("nombre") }}</p>
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="font-weight-bold">Ciudad</label>
+                                        <input type="text" class="form-control form-control-lg" [(ngModel)]="clienteEdit.ciudad" placeholder="Introduce tu ciudad" aria-describedby="basic-addon1" formControlName="ciudad">
+                                        <div class="text-danger mt-2" *ngIf="invalidFieldP('ciudad')">
+        
+                                            <p>{{ getErrorMessage("ciudad") }}</p>
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="font-weight-bold">Dirección</label>
+                                        <input type="text" class="form-control form-control-lg" [(ngModel)]="clienteEdit.direccion" placeholder="Introduce tu dirección" aria-describedby="basic-addon1" formControlName="direccion">
+                                        <div class="text-danger mt-2" *ngIf="invalidFieldP('direccion')">
+        
+                                            <p>{{ getErrorMessage("direccion") }}</p>
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="font-weight-bold">Cédula</label>
+                                        <input type="text" class="form-control form-control-lg" onkeypress="return event.charCode>=48 && event.charCode<=57" [(ngModel)]="clienteEdit.cedula" placeholder="Introduce tu cédula" aria-describedby="basic-addon1" formControlName="cedula" maxlength="10">
+                                        <div class="text-danger mt-2" *ngIf="invalidFieldP('cedula')">
+        
+                                            <p>{{ getErrorMessage("cedula") }}</p>
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="font-weight-bold">Teléfono</label>
+                                        <input type="text"  prefix="+57" mask=" (000) 000 00 00" class="form-control form-control-lg" [(ngModel)]="clienteEdit.telefono" placeholder="Introduce tu teléfono" aria-describedby="basic-addon1" formControlName="telefono">
+                                        <div class="text-danger mt-2" *ngIf="invalidFieldP('telefono')">
+        
+                                            <p>{{ getErrorMessage("telefono") }}</p>
+            
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="font-weight-bold">Correo</label>
+                                        <input type="email" class="form-control form-control-lg" [(ngModel)]="clienteEdit.correo" placeholder="Introduce tu email" aria-describedby="basic-addon1" formControlName="correo">
+                                        <div class="text-danger mt-2" *ngIf="invalidFieldP('correo')">
+        
+                                            <p>{{ getErrorMessageFromMail("correo") }}</p>
+            
+                                        </div>
+                                    </div>
+    
+                                    <div class="input-group mb-3">
+                                        <button class="btn btn-success">Actualizar Perfil</button>
+                                    </div> 
+                                </div>                               
+                            </form>        
+                          </div>                                
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="2">
+                        <a ngbNavLink>Cambiar Contraseña</a>
+                        <ng-template ngbNavContent>
+                          <div class="card-body">
+                            <form class="form-horizontal m-t-20" id="contrasenaForm" autocomplete="off" [formGroup]="contrasenaForm" (ngSubmit)="cambiarContra()">
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control form-control-lg" placeholder="Contraseña" aria-describedby="basic-addon1" formControlName="contrasena">
+                                </div>
+                                <div class="text-danger mt-2" *ngIf="invalidFieldC('contrasena')">
+    
+                                    <p>{{ getErrorMessageC("contrasena") }}</p>
+    
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="password" class="form-control form-control-lg" placeholder="Confirma tu contraseña" aria-describedby="basic-addon1" formControlName="contrasena2">
+                                </div>
+                                <div class="text-danger mt-2" *ngIf="invalidPasswords()">
+    
+                                    <p>Las contraseñas deben ser iguales</p>
+    
+                                </div>                    
+                                                        
+                                <div class="input-group mb-3">
+                                    <button class="btn btn-success">Actualizar Contraseña</button>
+                                </div>
+                            </form>                                    
+                          </div>                                
+                        </ng-template>
+                      </li>
+                    </ul>
+        
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                 </div>   
+                    
+                </div>
+            </div>
+            <!-- Column -->
+        </div>

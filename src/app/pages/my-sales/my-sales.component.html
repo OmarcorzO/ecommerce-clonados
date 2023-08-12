@@ -1,0 +1,308 @@
+<div class="row wrap">
+    <div class="col-12">
+        <div class="card card-body">
+            <div class="row">
+                <!-- column -->
+                <div class="col-xs-12 col-md-4 col-lg-4 mb-3 total-tickets" (click)="search('todos')">
+                    <div>
+                        <div class="box p-20 bg-info text-center">
+                            <h1 class="font-light text-white m-0">{{ myTotalSales }}</h1>
+                            <h6 class="text-white m-0 mt-2">Mis ventas totales</h6>
+                        </div>
+                    </div>
+                </div>
+                <!-- column -->
+                <!-- column -->
+                <div class="col-xs-12 col-md-4 col-lg-4 mb-3 total-tickets" (click)="search('entregado')">
+                    <div>
+                        <div class="box p-20 bg-success text-center">
+                            <h1 class="font-light text-white m-0">{{ totalSalesDelivered }}</h1>
+                            <h6 class="text-white m-0 mt-2">Pedidos entregados</h6>
+                        </div>
+                    </div>
+                </div>
+                <!-- column -->
+                <!-- column -->
+                <div class="col-xs-12 col-md-4 col-lg-4 mb-3 total-tickets" (click)="search('no entregado')">
+                    <div>
+                        <div class="box p-20 bg-warning text-center">
+                            <h1 class="font-light text-white m-0">{{ totalUndeliveredSales }}</h1>
+                            <h6 class="text-white m-0 mt-2">Pedidos no entregados</h6>
+                        </div>
+                    </div>
+                </div>
+                <!-- column -->
+            </div>
+            <div class="row mb-2 position-relative">
+                <div class="col-12 float-left align-center justify-content-center">
+                    <h4 *ngIf="toLookFor === 'todos'" class="h3 mb-2 text-gray-800 pt-2">Buscar en todas las ventas</h4>
+                    <h4 *ngIf="toLookFor === 'entregado'" class="h3 mb-2 text-gray-800 pt-2">Buscar solo en las ventas entregadas</h4>
+                    <h4 *ngIf="toLookFor === 'no entregado'" class="h3 mb-2 text-gray-800 pt-2">Buscar solo en las ventas no entregadas</h4>
+                </div>
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar por nombre, cédula, correo o teléfono del cliente." (keyup)="uploadFilteredSales(txtTerm.value)" #txtTerm/>
+                        <button class="btn btn-danger" (click)="clearSearch()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-12 mr-0">
+                    <h4 class="h3 mb-2 text-gray-800 pt-2">Buscar por rango de fecha <strong class="text-info optional-text">(Opcional)</strong></h4>
+                    <div class="form-inline">
+                        <form class="form-inline mr-2">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input class="form-control" (ngModelChange)="onDateChange()" placeholder="Desde la fecha" name="dp2" [(ngModel)]="fromDate"
+                                        ngbDatepicker [markDisabled]="isDisabled" #d3="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary no-shadow" (click)="d3.toggle()" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input class="form-control" placeholder="Hasta la fecha" name="dp3" [(ngModel)]="toDate"
+                                        ngbDatepicker [markDisabled]="disableToDate" #d4="ngbDatepicker">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary no-shadow" (click)="d4.toggle()" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="input-group p-action-button mt-2">
+                    <button class="btn btn-danger clean-dates" (click)="cleanDates()">
+                        <i class="fas fa-times"></i> Eliminar fechas
+                    </button>
+                    <button class="btn btn-primary clean-dates show-all-button" (click)="showAllSales()">
+                       <i class="fas fa-undo-alt"></i> Mostrar todo
+                    </button>
+                    <button class="btn btn-info clean-dates search-button" (click)="uploadFilteredSales(txtTerm.value)">
+                       <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+            <div class="col-12 mb-0 table-users">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="row bd-highlight mb-3">
+                            <div class="col-10 float-left align-center justify-content-center">
+                                <h1 *ngIf="toLookFor === 'todos' && !lookingForSomething" class="h3 mb-0 text-gray-800 pt-2">Mis ventas totales: {{ myTotalSales }}</h1>
+                                <h1 *ngIf="toLookFor === 'entregado' && !lookingForSomething" class="h3 mb-0 text-gray-800 pt-2">Total de ventas entregadas: {{ totalSalesDelivered }}</h1>
+                                <h1 *ngIf="toLookFor === 'no entregado' && !lookingForSomething" class="h3 mb-0 text-gray-800 pt-2">Total de ventas no entregadas: {{ totalUndeliveredSales }}</h1>
+                                <h1 *ngIf="lookingForSomething" class="h3 mb-0 color-text-totalSearchResults pt-2">Total de resultados de la búsqueda: {{ totalResults }}</h1>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="charging">
+                            <div class="col-12">
+                        
+                                <div class="text-center mt-4">
+                                    <app-cargando></app-cargando>
+                                </div>
+                        
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="!result && !charging">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 pb-4">
+                                            <div class="text-center">
+                                                <img class="img-search" src="../../../assets/images/big/undraw_personal_finance_tqcd.svg" alt="No hay resultados">
+                                                <h5 class="text-muted mt-3">No tienes ventas por el momento.</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive" *ngIf="!charging && result">
+                            <table class="table table-bordered table-hover">
+                                <thead class="thead-dark">
+                                    <tr class="text-center">
+                                        <th class="width-fecha-th">Fecha de compra</th>
+                                        <th>Precio Total</th>
+                                        <th class="width-estado-th">Estado</th>
+                                        <th class="th-reducido">Productos comprados</th>
+                                        <th>Cliente</th>
+                                        <th>Cédula</th>
+                                        <th>Estado de la transacción</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let pedido of sales | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize" class="text-center">
+                                        <td>{{ formatDate(pedido.fecha.toMillis()) }}</td>
+                                        <td>{{ getTotal(pedido.precioTotal) }}</td>
+                                        <td>
+                                            <select class="form-control" [(ngModel)]="pedido.estado" (change)="updateStatus( pedido )">
+                                                <option value="entregado">Entregado</option>
+                                                <option value="no entregado">No entregado</option>
+                                            </select>
+                                        </td>
+                                        <td>{{ pedido.cantidadProductos }}</td>
+                                        <td>{{ pedido.cliente.nombre }}</td>
+                                        <td>{{ pedido.cliente.cedula }}</td>
+                                        <td *ngIf="pedido.estadoTransaccion === 'PENDING'"><span class="label label-warning">PENDIENTE</span></td>
+                                        <td *ngIf="pedido.estadoTransaccion === 'APPROVED'"><span class="label label-success">APROBADA</span></td>
+                                        <td *ngIf="pedido.estadoTransaccion === 'DECLINED'"><span class="label label-danger">RECHAZADA</span></td>
+                                        <td *ngIf="pedido.estadoTransaccion === 'ERROR'"><span class="label label-danger">ERROR</span></td>
+                                        <td *ngIf="pedido.estadoTransaccion === 'VOIDED'"><span class="label label-danger">ANULADA</span></td>
+                                        <td>
+                                            <div ngbDropdown class="d-inline-block mt-3">
+                                                <button class="btn btn-info" id="dropdownBasic1" ngbDropdownToggle>
+                                                    Acciones
+                                                </button>
+                                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                                    <a class="dropdown-item cursor-pointer" data-toggle="tooltip" title="Ver detalles del pedido" 
+                                                    [routerLink]="['/dashboard/detalles-del-pedido/', pedido.id ]">
+                                                        <i class="fas fa-eye"></i> Ver detalles del pedido
+                                                    </a>
+                                                    <a class="dropdown-item cursor-pointer" (click)="openModal(modalUserProfile, pedido.cliente)" data-toggle="tooltip" title="Ver información del usuario">
+                                                        <i class="fas fa-eye"></i> Ver información del usuario
+                                                    </a>
+                                                    <a class="dropdown-item cursor-pointer" (click)="openModal(modalUserImg, pedido.cliente)" data-toggle="tooltip" title="Imagen de perfil del usuario">
+                                                        <i class="fas fa-eye"></i> Ver imagen de perfil del usuario
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Aqui va el codigo de la paginación de la tabla -->
+                        <div class="d-flex justify-content-between" *ngIf="!charging && result">
+                            <ngb-pagination [(page)]="cpage" [pageSize]="cpageSize" [collectionSize]="totalResults"></ngb-pagination>
+                            <select class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                                <option [ngValue]="5">5 registros por página</option>
+                                <option [ngValue]="10">10 registros por página</option>
+                                <option [ngValue]="30">30 registros por página</option>
+                                <option [ngValue]="50">50 registros por página</option>
+                                <option [ngValue]="100">100 registros por página</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
+    </div>
+</div>
+
+<ng-template #modalUserProfile let-modal>
+    <div class="modal-header">
+        <img [src]="saleCustomer.img" alt="Foto del usuario {{ saleCustomer.nombre }}" class="user-image-in-details cursor-pointer" onError="this.src='../../../assets/images/big/no-img.png';"/>
+        <h4 class="modal-title title-info" id="modal-basic-title"> Informacion del usuario</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <!-- Row -->
+        <div class="row">
+            <div class="col-lg-11">
+                <div class="card">
+                        <div class="form-body">
+                            <div class="card-body">
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-5">Nombre completo:</label>
+                                            <div class="col-md-7">
+                                                <p class="form-control-static"> {{ saleCustomer.nombre }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-5">Ciudad o municipio:</label>
+                                            <div class="col-md-7">
+                                                <p class="form-control-static"> {{ saleCustomer.ciudad }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-5">Dirección:</label>
+                                            <div class="col-md-7">
+                                                <p class="form-control-static"> {{ saleCustomer.direccion }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-5">Teléfono:</label>
+                                            <div class="col-md-7">
+                                                <p class="form-control-static"> {{ saleCustomer.telefono }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                                <!--/row-->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-5">Cédula:</label>
+                                            <div class="col-md-7">
+                                                <p class="form-control-static"> {{ saleCustomer.cedula }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="control-label text-right col-md-5">Correo:</label>
+                                            <div class="col-md-7">
+                                                <p class="form-control-static"> {{ saleCustomer.correo }} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/span-->
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <!-- Row -->
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>
+
+<ng-template #modalUserImg let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title"><i class="fas fa-user"></i> Imagen de perfil del usuario</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="text-center">
+            <img [src]="saleCustomer.img" alt="Foto del usuario {{ saleCustomer.nombre }}" class="user-image imagen-producto" onError="this.src='../../../assets/images/big/no-img.png';"/>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>

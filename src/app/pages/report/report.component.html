@@ -1,0 +1,63 @@
+<div class="row" *ngIf="loadingComment || loadingProduct">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+
+<div class="row" *ngIf="!loadingComment && !loadingProduct && !loadingUserData">
+    <div class="col-12">
+        <h2 class="mb-3">¿Por qué quieres denunciar el comentario?</h2>
+        <div class="row">
+            <div class="col-sm-12 col-md-7 col-lg-8">
+                <ul class="list-group pl-0 shadow-sm">
+                    <li [ngClass]="(reasonOne)?'selected-motif':''" class="list-group-item p-5 border-bottom border-top-0 border-right-0 border-left-0 cursor-pointer d-flex align-items-center" (click)="selectedMotif(1)">
+                        <h5 class="mb-0">Tiene contenido ofensivo, obsceno o discriminatorio.</h5>
+                    </li>
+                    <li [ngClass]="(reasonTwo)?'selected-motif':''" class="list-group-item p-5 border-bottom border-top-0 border-right-0 border-left-0 cursor-pointer d-flex align-items-center" (click)="selectedMotif(2)">
+                        <h5 class="mb-0">Información falsa.</h5>
+                    </li> 
+                    <li [ngClass]="(reasonThree)?'selected-motif':''" class="list-group-item p-5 border-bottom border-top-0 border-right-0 border-left-0 cursor-pointer d-flex align-items-center" (click)="selectedMotif(3)">
+                        <h5 class="mb-0">Lenguaje o símbolos que incitan al odio.</h5>
+                    </li> 
+                </ul>
+                <div class="card mt-4">
+                    <div class="card-body">
+                            <h3 class="mb-3">Cuéntanos más sobre tu denuncia</h3>
+                            <form [formGroup]="complaintForm" (submit)="saveComplaint()">
+                                <textarea class="form-control" [ngClass]="{ 'is-invalid': invalidField('descripcion'), 'is-valid': !invalidField('descripcion') &&  formSubmitted === true }" placeholder="Danos más detalles..." formControlName="descripcion"></textarea>
+                                <div class="text-danger mt-2" *ngIf="invalidField('descripcion')">
+    
+                                    <p>{{ getErrorMessage("descripcion") }}</p>
+    
+                                </div>
+                                <button type="submit" class="btn btn-success m-r-10 mt-3"><i class="fas fa-save"></i> Denunciar</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-5 col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Comentario</h4>
+                        <hr>
+                        <p>{{ comment.texto }}</p>
+                        <hr>
+                        <h5>Detalle de la publicación</h5>
+                        <div class="row">
+                           <div class="col-3">
+                               <img [src]="product.foto" alt="Foto del producto" class="img-fluid product-photo">
+                           </div>
+                           <div class="col-9">
+                               <p>{{ product.nombre }}</p>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

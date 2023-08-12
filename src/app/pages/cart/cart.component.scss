@@ -1,0 +1,20 @@
+.main-table{
+    max-height: 75vh;
+}
+
+.product-title-font-weight{
+    font-weight: 600;
+}
+
+.delete-product-row-carrito{
+    cursor: pointer;
+}
+
+.alineacion {
+    justify-self: right;
+}
+
+.display-foot{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

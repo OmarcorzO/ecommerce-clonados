@@ -1,0 +1,149 @@
+.img-producto{
+    border-radius: 15px;
+    min-width: 100%;
+    max-height: 20rem;
+}
+
+.name-title{
+    font-weight: 600;
+}
+
+.description-title{
+    font-weight: 600;
+}
+
+.average{
+    width: 250px;
+    height: 42px;
+}
+
+.star-block{
+  width: 20%;
+  display: inline-block;
+}
+
+.average-block{
+    width: 80%;
+    display: inline-block;
+}
+
+.star{
+    color: #ffc602;
+    font-size: 2rem;
+}
+
+.average-grade{
+    color: rgba(44, 44, 44, 0.9);
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 0.4rem;
+    margin-left: -20px;
+    // line-height: 1.03;
+    // text-align: end;
+}
+
+.average-text{
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 1.14;
+    margin-top: 8px;
+}
+
+.category-title{
+    color: #006cfa;
+}
+
+.stock-title{
+    margin-top: 2rem;
+    color: #398bf7;
+}
+
+.price-with-discount{
+    font-weight: 400;
+}
+
+.img-search {
+    max-width: 80%;
+    height: 200px;
+    max-height: 200px;
+}
+
+/* Cargando comentarios */
+/* From uiverse.io by @barisdogansutcu */
+svg {
+    width: 3.25em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+}
+   
+circle {
+    fill: none;
+    stroke: hsl(214, 97%, 59%);
+    stroke-width: 2;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+100% {
+    transform: rotate(360deg);
+}
+}
+
+@keyframes dash4 {
+0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+}
+
+50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+}
+
+100% {
+    stroke-dashoffset: -125px;
+}
+}
+   
+
+/* Boton de volver arriba */
+.button{
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    color: #398bf7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.7s ease-in-out;
+
+    &:hover{
+        font-size: 1.4rem;
+    }
+}
+
+.date-block-and-complaint{
+    height: 25px;
+}
+
+.report{
+    opacity: 0;
+}
+
+.comment-block:hover .report{
+    opacity: 1;
+    cursor: pointer;
+}
+

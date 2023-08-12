@@ -1,0 +1,400 @@
+<div class="row" *ngIf="charging && charging2 && charging3">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+
+<div class="row mb-4" *ngIf="!charging && !charging2 && !charging3">
+   <h3 class="titles ml-2">Buscar productos</h3>
+   <div class="col-12">
+        <div class="group">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><g><path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path></g></svg>
+            <input placeholder="Buscar productos" type="text" class="input" (keyup)="searchProducts(txtTerm.value)" #txtTerm >
+            <button class="btn btn-danger" (click)="clearSearch()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+   </div>
+</div>
+
+<div class="row" *ngIf="loadingSearch">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="loader text-center"></div>
+                <div class="text-center">
+                    <p>Cargando, por favor espera un momento...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NUEVO CODIGO -->
+<div class="row el-element-overlay" *ngIf="lookingForProducts && !loadingSearch">
+    <h3 class="titles col-12 ml-2">Total de resultados de la búsqueda: {{ totalResults }}</h3>
+    
+    <div class="col-12" *ngIf="!result && !loadingSearch">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-center">
+                    <div class="text-center mr-3">
+                        <img class="img-search" src="../../../assets/images/icon/Research_Lineal-coloured.svg" width="100" height="100" alt="No hay resultados">
+                    </div>
+                    <div>
+                        <h3>No hay publicaciones que coincidan con tu búsqueda.</h3>
+                        <ul>
+                            <li><strong>Revisa la ortografía</strong> de la palabra.</li>
+                            <li>Utiliza <strong>palabras más genéricas</strong> o menos palabras.</li>
+                            <li>Navega por las categorías para encontrar un producto similar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 card-producto" *ngFor="let producto of productSearchResults">
+        <a *ngIf="directToHomePage" [routerLink]="['/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>     
+
+<!-- FIN -->
+
+<div *ngIf="!charging && !charging2 && !charging3 && thereArePublications && lastCategoriesToShow.length > 3" class="row">
+    <div class="col-12">
+        <h3 class="titles float-left">Categorías</h3>
+        <div class="float-right category-actions ml-1">
+            <a *ngIf="directToHomePage" class="btn btn-outline-info" [routerLink]="['/ver-categorias' ]">Ver todas</a>
+            <a *ngIf="!directToHomePage" class="btn btn-outline-info" [routerLink]="['/dashboard/ver-categorias' ]">Ver todas</a>
+            <div ngbDropdown class="d-inline-block">
+                <button
+                    class="btn btn-info"
+                    id="dropdownBasic2"
+                    ngbDropdownToggle
+                >
+                    {{ categoryToSearch }}
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                    <div *ngFor="let element of lastCategoriesToShow">
+                        <button (click)="selectedCategory($event)" class="dropdown-item">{{ element.nombre }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<swiper *ngIf="lastCategoriesToShow.length > 3" [navigation]="true" [slidesPerView]="4" [spaceBetween]="20"
+    [breakpoints]="{
+        '100': {
+        slidesPerView: 1
+        },
+        '640': {
+        slidesPerView: 2
+        },
+        '768': {
+        slidesPerView: 3
+        },
+        '1024': {
+        slidesPerView: 4
+        }
+    }" 
+    [autoplay]="{
+        delay: 10000,
+        disableOnInteraction: false
+    }"
+ class="mySwiper">
+    <ng-template swiperSlide *ngFor="let category of lastCategoriesToShow">
+        <div class="row el-element-overlay" *ngIf="!charging && !charging2 && !charging3  && thereArePublications">
+            <div class="col-lg-12 col-md-12 card-producto">
+                <a *ngIf="directToHomePage" [routerLink]="['/ver-productos-por-categoria/', category.nombre ]">
+                    <div class="card">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <img [src]="category.foto" alt="Foto de la categoría {{ category.nombre }}" class="category-image"/>
+                            </div>
+                            <div class="category-card-height d-flex no-block">
+                                <div class="m-l-15">
+                                    <h4 class="m-b-0">{{ category.nombre | slice:0:23 }}{{ (category.nombre.length > 23) ? '...': '' }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/ver-productos-por-categoria/', category.nombre ]">
+                    <div class="card">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <img [src]="category.foto" alt="Foto de la categoría {{ category.nombre}}" class="category-image"/>
+                            </div>
+                            <div class="category-card-height d-flex no-block">
+                                <div class="m-l-15">
+                                    <h4 class="m-b-0">{{ category.nombre | slice:0:23 }}{{ (category.nombre.length > 23) ? '...': '' }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </ng-template>
+</swiper>
+<div *ngIf="!charging && !charging2 && !charging3 && thereArePublications && latestProductsWithDiscounts.length > 3" class="row">
+    <div class="col-12">
+        <h3 class="titles float-left">Ofertas</h3>
+        <div class="float-right ml-1">
+            <a *ngIf="directToHomePage" class="btn btn-outline-info" [routerLink]="['/ver-ofertas' ]">Ver todas</a>
+            <a *ngIf="!directToHomePage" class="btn btn-outline-info" [routerLink]="['/dashboard/ver-ofertas' ]">Ver todas</a>
+        </div>
+    </div>
+</div>
+<swiper *ngIf="latestProductsWithDiscounts.length > 3" [navigation]="true" [slidesPerView]="4" [spaceBetween]="20"
+    [breakpoints]="{
+        '100': {
+        slidesPerView: 1
+        },
+        '640': {
+        slidesPerView: 2
+        },
+        '768': {
+        slidesPerView: 3
+        },
+        '1024': {
+        slidesPerView: 4
+        }
+    }" 
+    [autoplay]="{
+        delay: 10000,
+        disableOnInteraction: false
+    }"
+ class="mySwiper">
+    <ng-template swiperSlide *ngFor="let product of latestProductsWithDiscounts">
+        <div class="row el-element-overlay" *ngIf="!charging && !charging2 && !charging3 && thereArePublications">
+            <div class="col-lg-12 col-md-12 card-producto">
+                <a *ngIf="directToHomePage" [routerLink]="['/detalle-producto/', product.id ]">
+                    <div class="card">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <img [src]="product.foto" alt="Foto del producto {{ product.nombre}}" class="imagen-producto"/>
+                            </div>
+                            <div class="height-card d-flex no-block">
+                                <div class="m-l-15">
+                                    <h4 class="m-b-0">{{ product.nombre | slice:0:33 }}{{ (product.nombre.length > 33) ? '...': '' }}</h4>
+                                    <h4 class="mt-2 price-of-the-product">{{ getDiscountedPrice(product.precioNormal, product.precioReducido) }}
+                                        <small class="text-success" *ngIf="product.precioReducido > 0">({{ product.precioReducido }}% off)</small>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/detalle-producto/', product.id ]">
+                    <div class="card">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <img [src]="product.foto" alt="Foto del producto {{ product.nombre}}" class="imagen-producto"/>
+                            </div>
+                            <div class="height-card d-flex no-block">
+                                <div class="m-l-15">
+                                    <h4 class="m-b-0">{{ product.nombre | slice:0:33 }}{{ (product.nombre.length > 33) ? '...': '' }}</h4>
+                                    <h4 class="mt-2 price-of-the-product">{{ getDiscountedPrice(product.precioNormal, product.precioReducido) }}
+                                        <small class="text-success" *ngIf="product.precioReducido > 0">({{ product.precioReducido }}% off)</small>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </ng-template>
+</swiper>
+<div *ngIf="!charging && !charging2 && !charging3 && thereArePublications && latestProductsWithDiscounts.length > 3" class="row">
+    <div class="col-12">
+        <h3 class="titles float-left">Productos más buscados</h3>
+        <div class="float-right ml-1">
+            <a *ngIf="directToHomePage" class="btn btn-outline-info" [routerLink]="['/ver-ofertas' ]">Ver todos</a>
+            <a *ngIf="!directToHomePage" class="btn btn-outline-info" [routerLink]="['/dashboard/ver-ofertas' ]">Ver todos</a>
+        </div>
+    </div>
+</div>
+<swiper *ngIf="mostWantedProducts.length > 3" [navigation]="true" [slidesPerView]="4" [spaceBetween]="20"
+    [breakpoints]="{
+        '100': {
+        slidesPerView: 1
+        },
+        '640': {
+        slidesPerView: 2
+        },
+        '768': {
+        slidesPerView: 3
+        },
+        '1024': {
+        slidesPerView: 4
+        }
+    }" 
+    [autoplay]="{
+        delay: 10000,
+        disableOnInteraction: false
+    }"
+ class="mySwiper">
+    <ng-template swiperSlide *ngFor="let product of mostWantedProducts">
+        <div class="row el-element-overlay" *ngIf="!charging && !charging2 && !charging3 && thereArePublications">
+            <div class="col-lg-12 col-md-12 card-producto">
+                <a *ngIf="directToHomePage" [routerLink]="['/detalle-producto/', product.id ]">
+                    <div class="card">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <img [src]="product.foto" alt="Foto del producto {{ product.nombre}}" class="imagen-producto"/>
+                            </div>
+                            <div class="height-card d-flex no-block">
+                                <div class="m-l-15">
+                                    <h4 class="m-b-0">{{ product.nombre | slice:0:33 }}{{ (product.nombre.length > 33) ? '...': '' }}</h4>
+                                    <h4 class="mt-2 price-of-the-product">{{ getDiscountedPrice(product.precioNormal, product.precioReducido) }}
+                                        <small class="text-success" *ngIf="product.precioReducido > 0">({{ product.precioReducido }}% off)</small>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/detalle-producto/', product.id ]">
+                    <div class="card">
+                        <div class="el-card-item">
+                            <div class="el-card-avatar el-overlay-1">
+                                <img [src]="product.foto" alt="Foto del producto {{ product.nombre}}" class="imagen-producto"/>
+                            </div>
+                            <div class="height-card d-flex no-block">
+                                <div class="m-l-15">
+                                    <h4 class="m-b-0">{{ product.nombre | slice:0:33 }}{{ (product.nombre.length > 33) ? '...': '' }}</h4>
+                                    <h4 class="mt-2 price-of-the-product">{{ getDiscountedPrice(product.precioNormal, product.precioReducido) }}
+                                        <small class="text-success" *ngIf="product.precioReducido > 0">({{ product.precioReducido }}% off)</small>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </ng-template>
+</swiper>
+<div *ngIf="!charging && !charging2 && !charging3 && thereArePublications" class="row">
+    <div class="col-12">
+        <div class="float-left">
+            <h3 class="titles">Todos los productos</h3>
+        </div>
+        <div class="float-right product-pager-options">
+            <div class="d-flex justify-content-between">
+                <select class="custom-select" style="width: auto" [(ngModel)]="cpageSize">
+                    <option [ngValue]="8">8 productos por página</option>
+                    <option [ngValue]="16">16 productos por página</option>
+                    <option [ngValue]="24">24 productos por página</option>
+                    <option [ngValue]="48">48 productos por página</option>
+                    <option [ngValue]="100">100 productos por página</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row el-element-overlay" *ngIf="!charging && !charging2 && !charging3 && thereArePublications">
+    <div class="col-lg-3 col-md-6 card-producto" *ngFor="let producto of productos | slice: (cpage-1) * cpageSize : (cpage-1) * cpageSize + cpageSize">
+        <a *ngIf="directToHomePage" [routerLink]="['/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        <a *ngIf="!directToHomePage" [routerLink]="['/dashboard/detalle-producto/', producto.id ]">
+            <div class="card">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img [src]="producto.foto" alt="Foto del producto {{ producto.nombre}}" class="imagen-producto"/>
+                    </div>
+                    <div class="height-card d-flex no-block">
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">{{ producto.nombre | slice:0:33 }}{{ (producto.nombre.length > 33) ? '...': '' }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido == 0">{{ getPrice(producto.precioNormal) }}</h4>
+                            <h4 class="mt-2 price-of-the-product" *ngIf="producto.precioReducido > 0">{{ getDiscountedPrice(producto.precioNormal, producto.precioReducido) }}
+                                <small class="ml-1 text-success">({{ producto.precioReducido }}% off)</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="col-12 p-0" *ngIf="!charging && !charging2 && !charging3 && !thereArePublications">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 p-3">
+                    <div class="text-center">
+                        <img class="img-search" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                        <h5 class="text-muted mt-4 mb-1">No existen publicaciones de productos aún</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!charging && !charging2 && !charging3">
+    <div class="col-12">
+      <div class="float-right">
+        <ngb-pagination [(page)]="cpage" [pageSize]="cpageSize" [collectionSize]="totalProducts"></ngb-pagination>
+      </div>
+    </div>
+</div>

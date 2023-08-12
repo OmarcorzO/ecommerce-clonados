@@ -1,0 +1,59 @@
+<div class="auth-wrapper d-flex no-block justify-content-center align-items-center login-background" style="background:url(assets/images/big/carrito-fondo.jpg) no-repeat center center fixed; background-size: cover;">
+    <div>
+        <div class="auth-box">
+            <div id="loginform" [ngClass]="{'d-none': recoverform}">
+                <div class="logo">
+                    <span class="db"><img src="assets/images/logo-icon.png" alt="logo" /></span>
+                    <h5 class="font-medium m-b-20">Iniciar Sesión</h5>
+                </div>
+                <!-- <div *ngIf="msg" class="alert alert-danger">{{ msg }}</div> -->
+                <!-- Form -->
+                <div class="row">
+                    <div class="col-12">
+                        <form class="form-horizontal m-t-20" id="loginForm" autocomplete="off" [formGroup]="loginForm" (ngSubmit)="login()">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1"><i class="ti-user"></i></span>
+                                </div>
+                                <input type="email" class="form-control form-control-lg" placeholder="Correo" aria-label="Username" aria-describedby="basic-addon1" formControlName="correo">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('correo')">
+
+                                <p>{{ getErrorMessage("correo") }}</p>
+
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon2"><i class="ti-pencil"></i></span>
+                                </div>
+                                <input type="password" class="form-control form-control-lg" placeholder="Contraseña" aria-label="Password" aria-describedby="basic-addon1" formControlName="contrasena">
+                            </div>
+                            <div class="text-danger mt-2" *ngIf="invalidField('contrasena')">
+
+                                <p>{{ getErrorMessage("contrasena") }}</p>
+
+                            </div>
+                            <div class="form-group text-center">
+                                <div class="col-xs-12 p-b-20">
+                                    <!-- <button class="btn btn-block btn-lg btn-info" type="button" (click)="check(u1.value, p2.value)">Log -->
+                                    <button class="btn btn-block btn-lg btn-info">Iniciar Sesión</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-group m-b-0 m-t-10">
+                            <div class="col-sm-12 text-center">
+                                <a routerLink="/ver-productos" class="text-primary m-l-5"><b>Regresar</b></a>
+                            </div>
+                            <div class="col-sm-12 text-center">
+                                Aun no tienes cuenta? <a routerLink="/register" class="text-info m-l-5"><b>Registrate</b></a>
+                            </div>
+                            <div class="col-sm-12 text-center">
+                                <a routerLink="/recover" class="text-primary m-l-5"><b>¿Olvidaste tu contraseña?</b></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>

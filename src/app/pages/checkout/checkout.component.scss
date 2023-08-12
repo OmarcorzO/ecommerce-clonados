@@ -1,0 +1,48 @@
+.main-table{
+    max-height: 60vh;
+}
+
+th,
+td {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+.div-paypal{
+    width: 30%;
+    max-width: 30%;
+}
+
+.product-title-font-weight{
+    font-weight: 600;
+}
+
+.delete-product-row-carrito{
+    cursor: pointer;
+}
+
+.remove-icon{
+    color: white !important;
+}
+
+.alineacion {
+    justify-self: right;
+}
+
+.display-foot{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.boton-continuar{
+   top: 0;
+   right: 0;
+}
+   
+
+@media (max-width: 768px) { 
+    .boton-continuar{
+       right: 0;
+       bottom: 0;
+    }
+}

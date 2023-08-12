@@ -1,0 +1,159 @@
+<div class="row" *ngIf="charging  && !uploadedUserData && loadingPolicies">
+    <div class="col-12">
+
+        <div class="text-center mt-4">
+            <app-cargando></app-cargando>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="row" *ngIf="!charging && uploadedUserData && !loadingPolicies">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-content-between" ngbDropdown>
+                    <h5 class="card-title">RESUMEN DE PRODUCTOS</h5>
+                    <button type="button" ngbDropdownToggle id="dropdownBasic1" class="btn btn-outline-info btn-circle mb-3"><i class="fas fa-ellipsis-v"></i> </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1" (click)="openModal(modalPolicies)">
+                        <button class="dropdown-item"><i class="fas fa-eye"></i> Ver nuestras políticas de envíos y devoluciones</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered v-middle">
+                        <thead>
+                            <tr>
+                                <th>Foto</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Descuento</th>
+                                <th>Total</th>
+                                <th width="250" *ngIf="loggedUserData.uid === pedido.cliente.uid && pedido.estadoTransaccion === 'APPROVED'">Opinar sobre el producto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let productoPedido of pedido.productos">
+                                <td align="center">
+                                    <img [src]="productoPedido.producto.foto" alt="iMac" width="100">
+                                </td>
+                                <td width="450">
+                                    <a class="product-title-font-weight text-dark" [routerLink]="['/dashboard/detalle-producto/', productoPedido.producto.id ]">{{ productoPedido.producto.nombre }}</a>
+                                </td>
+                                <td>{{ productoPedido.cantidad }}</td>
+                                <td class="font-500">{{ productoPedido.producto.precioNormal | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                                <td class="font-500" *ngIf="productoPedido.producto.precioReducido > 0">
+                                    {{ productoPedido.producto.precioReducido }}%</td>
+                                <td class="font-500" *ngIf="productoPedido.producto.precioReducido == 0">No Aplica</td>
+                                <td width="150" class="font-500">{{ productoPedido.total | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                                <td *ngIf="loggedUserData.uid === pedido.cliente.uid && pedido.estadoTransaccion === 'APPROVED'"><button class="btn btn-cyan text-white" (click)="openModal(modalRateProduct, productoPedido)">Opinar</button></td>
+                            </tr>
+                            <tr *ngIf="loggedUserData.uid === pedido.cliente.uid && pedido.estadoTransaccion === 'APPROVED'">
+                                <td colspan="6" class="font-500" align="right">Monto Total</td>
+                                <td class="font-500">{{ total | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                            </tr>
+                            <tr *ngIf="loggedUserData.uid !== pedido.cliente.uid || pedido.estadoTransaccion !== 'APPROVED'">
+                                <td colspan="5" class="font-500" align="right">Monto Total</td>
+                                <td class="font-500">{{ total | currency:'CAD':'symbol-narrow':'.0-0' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalPolicies let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Políticas de envíos y devoluciones</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <quill-view-html [content]="shippingAndReturnPolicies.descripcion" theme="snow"></quill-view-html>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>
+
+<ng-template #modalRateProduct let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">¿Qué te pareció el producto?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="verifyingProduct">
+            <div class="text-center mt-4 mb-4">
+                <svg viewBox="25 25 50 50">
+                    <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+            </div>
+        </div>
+        <div class="row" *ngIf="!verifyingProduct && !theProductExists">
+            <div class="col-12 p-3">
+                <div class="text-center">
+                    <img class="product-stock-picture" src="../../../assets/images/big/Shopping cart_Isometric.svg" alt="no results">
+                    <h5 class="text-muted mt-4 mb-1">Este producto no existe actualmente, por lo tanto no se puede calificar o comentar.</h5>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!verifyingProduct && theProductExists">
+            <div class="row" *ngIf="product.calificado && product.comentado">
+                <div class="col-12 text-center">
+                    <img src="../../../assets/images/big/undraw_reviews_lp8w.svg" class="default-image" alt="star">
+                    <h4>Ya calificaste y comentaste anteriormente este producto.</h4>
+                </div>
+            </div>
+            <div class="row" *ngIf="!product.calificado">
+                <div class="col-xs-12 col-md-6 col-lg-6">
+                    <p class="mb-0">{{ product.producto.nombre }}</p>
+                    <ngb-rating max="5" [(rate)]="currentRate"></ngb-rating>
+                </div>
+                <div class="col-xs-12 col-md-6 col-lg-6">
+                    <img [src]="product.producto.foto" alt="Foto del producto" class="product-image" onError="this.src='../../../assets/images/big/no-img.png';"/>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-info width-100" (click)="saveRating()">Guardar Calificación</button>
+                </div>
+            </div>
+            <div class="row" *ngIf="product.calificado && !product.comentado">
+                <div class="col-12 text-center">
+                    <img src="../../../assets/images/big/Star_Flat.svg" class="default-image" alt="star">
+                    <h4>Ya calificaste anteriormente este producto.</h4>
+                </div>
+            </div>
+            <hr *ngIf="!product.comentado || !product.calificado">
+            <div class="row" *ngIf="product.comentado && !product.calificado">
+                <div class="col-12 text-center">
+                    <img src="../../../assets/images/icon/Comment_Line.svg" class="default-image" alt="star">
+                    <h4>Ya comentaste anteriormente este producto.</h4>
+                </div>
+            </div>
+            <form [formGroup]="saveCommentForm" (submit)="saveComment()" *ngIf="!product.comentado">
+                <div class="form-row mb-2">
+                    <div class="form-group col-md-9">
+                        <label class="font-weight-bold">Cuéntale a otras personas tu experiencia con este producto</label>
+                        <textarea class="form-control" [ngClass]="{ 'is-invalid': invalidField('texto'), 'is-valid': !invalidField('texto') &&  formSubmitted === true }" placeholder="Introduce tu comentario" formControlName="texto"></textarea>
+                        <div class="text-danger mt-2" *ngIf="invalidField('texto')">
+
+                            <p>{{ getErrorMessage("texto") }}</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div>
+                <button class="btn btn-info width-100">Enviar Comentario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')"><i class="fas fa-times"></i> Cerrar</button>
+    </div>
+</ng-template>
